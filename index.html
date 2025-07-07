@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLEX GO - RUN THE CITY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #FF6B00;
+            --bg: #0A0A23;
+            --txt: #F5F5F7;
+            --grid: rgba(255,255,255,.05);
+            --noise: rgba(255,107,0,.25);
+        }
+        
+        @media(prefers-color-scheme: light) {
+            :root {
+                --bg: #F5F5F7;
+                --txt: #0A0A23;
+                --grid: rgba(0,0,0,.06);
+            }
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-inline-size: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header */
+        #nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 35, 0.8);
+            padding: 1rem 0;
+        }
+        
+        #nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-weight: 900;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--txt);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: var(--accent);
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        
+        /* Hero */
+        #hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        #hero video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            mask: url(#logo-mask);
+        }
+        
+        #noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            min-height: 60px;
+        }
+        
+        .cta-btn {
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-btn:hover,
+        .cta-btn:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.4);
+            outline: 2px solid var(--accent);
+        }
+        
+        /* Showroom */
+        #showroom {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #webgl {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .showroom-info {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background: rgba(10, 10, 35, 0.8);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Metrics */
+        #metric {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, var(--bg) 0%, #1a1a3a 100%);
+            perspective: 1000px;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+        
+        .metric-card {
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .metric-card:nth-child(1) {
+            transform: translateZ(0px);
+        }
+        
+        .metric-card:nth-child(2) {
+            transform: translateZ(50px);
+        }
+        
+        .metric-card:nth-child(3) {
+            transform: translateZ(100px);
+        }
+        
+        .num {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+        
+        .metric-label {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+        
+        .neon-line {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.6;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        /* Clients */
+        #clients {
+            padding: 8rem 0;
+            text-align: center;
+        }
+        
+        .client-stars {
+            margin-top: 4rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .star {
+            font-size: 3rem;
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .star:hover,
+        .star:focus {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px var(--accent)) url(#goo);
+        }
+        
+        .testimonial {
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            width: 200px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            filter: url(#goo);
+        }
+        
+        .star:hover .testimonial,
+        .star:focus .testimonial {
+            opacity: 1;
+        }
+        
+        /* Contact */
+        #contact {
+            padding: 8rem 0;
+            background: linear-gradient(135deg, #1a1a3a 0%, var(--bg) 100%);
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 4rem auto 0;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--txt);
+            font-family: inherit;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: 2px solid var(--accent);
+            border-color: var(--accent);
+        }
+        
+        /* PWA Ribbon */
+        .pwa-ribbon {
+            position: fixed;
+            top: 50%;
+            right: -300px;
+            transform: translateY(-50%);
+            background: var(--accent);
+            color: white;
+            padding: 1rem;
+            border-radius: 10px 0 0 10px;
+            transition: right 0.3s ease;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        
+        .pwa-ribbon.visible {
+            right: 0;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #confetti {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--txt);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            animation: socialPulse 3s infinite;
+        }
+        
+        .social-links a:hover,
+        .social-links a:focus {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+        
+        @keyframes socialPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .metric-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .client-stars {
+                gap: 1rem;
+            }
+            
+            .star {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* Houdini Paint */
+        @supports (background: paint(neon-grid)) {
+            .metric-grid {
+                background: paint(neon-grid);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="nav">
+        <div class="container">
+            <div class="logo">FLEX GO</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#hero">ホーム</a></li>
+                    <li><a href="#showroom">車両</a></li>
+                    <li><a href="#metric">実績</a></li>
+                    <li><a href="#contact">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <video autoplay muted loop aria-label="配送トラックの映像">
+            <source src="/assets/hero.mp4" type="video/mp4">
+        </video>
+        <canvas id="noise" aria-hidden="true"></canvas>
+        <div class="hero-content">
+            <h1 class="hero-title">RUN THE CITY</h1>
+            <p class="hero-subtitle" id="typewriter-text">次世代ロジスティクス・ソリューション</p>
+            <a href="#contact" class="cta-btn">ミッションを依頼</a>
+        </div>
+        <svg width="0" height="0" aria-hidden="true">
+            <defs>
+                <clipPath id="logo-mask">
+                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="200" font-weight="900">FLEX GO</text>
+                </clipPath>
+                <filter id="goo">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
+                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"/>
+                    <feBlend in="SourceGraphic" in2="goo"/>
+                </filter>
+            </defs>
+        </svg>
+    </section>
+
+    <section id="showroom">
+        <div class="showroom-info">
+            <h2>N-VAN SHOWROOM</h2>
+            <p>マウスでドラッグして360°確認</p>
+        </div>
+        <canvas id="webgl" aria-label="3D配送車両モデル"></canvas>
+    </section>
+
+    <section id="metric">
+        <div class="container">
+            <h2 style="text-align: center; font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 2rem;">実績データ</h2>
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="num" data-val="120">0</div>
+                    <div class="metric-label">時間 / 配送完了</div>
+                </div>
+                <div class="metric-card">
+                    <div class="num" data-val="1200">0</div>
+                    <div class="metric-label">km / 日間走行</div>
+                </div>
+                <div class="metric-card">
+                    <div class="num" data-val="3">0</div>
+                    <div class="metric-label">年間稼働実績</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="clients">
+        <div class="container">
+            <h2 style="text-align: center; font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 2rem;">クライアントの声</h2>
+            <div class="client-stars">
+                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
+                    ★
+                    <div class="testimonial">迅速で確実な配送サービスでした！</div>
+                </div>
+                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
+                    ★
+                    <div class="testimonial">コスト削減に大きく貢献しました</div>
+                </div>
+                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
+                    ★
+                    <div class="testimonial">24時間対応で助かります</div>
+                </div>
+                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
+                    ★
+                    <div class="testimonial">環境に優しい配送で満足</div>
+                </div>
+                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
+                    ★
+                    <div class="testimonial">追跡システムが便利です</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="container">
+            <h2 style="text-align: center; font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 2rem;">お問い合わせ</h2>
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">お名前</label>
+                    <input type="text" id="name" name="name" required aria-describedby="name-error">
+                </div>
+                <div class="form-group">
+                    <label for="email">メールアドレス</label>
+                    <input type="email" id="email" name="email" required aria-describedby="email-error">
+                </div>
+                <div class="form-group">
+                    <label for="message">メッセージ</label>
+                    <textarea id="message" name="message" rows="5" required aria-describedby="message-error"></textarea>
+                </div>
+                <button type="submit" class="cta-btn">送信</button>
+            </form>
+        </div>
+    </section>
+
+    <div class="pwa-ribbon" id="pwaRibbon" role="button" tabindex="0" aria-label="PWAインストール">
+        📱 ホーム画面に追加でオフライン見積もり
+    </div>
+
+    <footer>
+        <canvas id="confetti" aria-hidden="true"></canvas>
+        <div class="container">
+            <p>&copy; 2024 FLEX GO. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#" aria-label="Twitter">𝕏</a>
+                <a href="#" aria-label="Instagram">📷</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js" type="module"></script>
+    <script src="https://unpkg.com/three@0.158.0/examples/jsm/loaders/GLTFLoader.js" type="module"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
+    <script type="module">
+        import { createCanvas } from 'https://cdn.skypack.dev/shader-park-core';
+        import { OrbitControls } from 'https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js';
+        import { GLTFLoader } from 'https://unpkg.com/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
+        
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Smooth scrolling with Lenis
+        const lenis = new Lenis();
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        
+        // Shader Park Noise
+        const noiseEl = document.getElementById('noise');
+        if (noiseEl) {
+            const noise = createCanvas(noiseEl, ({ uv, time }) => {
+                return vec3(sin(uv.x * 10.0 + time) * 0.2 + 0.2, uv.y, 0.5);
+            });
+        }
+        
+        // Three.js Scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: document.getElementById('webgl'), 
+            antialias: true,
+            alpha: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x0A0A23);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 10, 5);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+        
+        // Anisotropic floor grid
+        const gridSize = 20;
+        const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, 20, 20);
+        const gridMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xFF6B00, 
+            wireframe: true,
+            opacity: 0.3,
+            transparent: true
+        });
+        const grid = new THREE.Mesh(gridGeometry, gridMaterial);
+        grid.rotation.x = -Math.PI / 2;
+        grid.position.y = -2;
+        scene.add(grid);
+        
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.target.set(0, 0, 0);
+        
+        // Load GLTF Model
+        const loader = new GLTFLoader();
+        let van;
+        loader.load('/assets/van.glb', (gltf) => {
+            van = gltf.scene;
+            van.scale.set(2, 2, 2);
+            van.position.set(0, 0, 0);
+            scene.add(van);
+            
+            // Drop and spin animation
+            gsap.fromTo(van.position, { y: 10 }, { y: 0, duration: 2, ease: "bounce.out" });
+            gsap.fromTo(van.rotation, { y: Math.PI * 2 }, { y: 0, duration: 2, ease: "power2.out" });
+        }, undefined, (error) => {
+            console.log('GLTF loading error, using fallback');
+            // Fallback van shape
+            const geometry = new THREE.BoxGeometry(4, 2, 2);
+            const material = new THREE.MeshPhongMaterial({ color: 0xFF6B00 });
+            van = new THREE.Mesh(geometry, material);
+            van.position.set(0, 0, 0);
+            scene.add(van);
+            
+            // Drop animation for fallback
+            gsap.fromTo(van.position, { y: 10 }, { y: 0, duration: 2, ease: "bounce.out" });
+            gsap.fromTo(van.rotation, { y: Math.PI * 2 }, { y: 0, duration: 2, ease: "power2.out" });
+        });
+        
+        camera.position.set(5, 5, 5);
+        camera.lookAt(0, 0, 0);
+        
+        // Animation loop
+        let scrollSpeed = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            
+            // Grid pulsation based on scroll speed
+            if (grid) {
+                const currentScroll = window.pageYOffset;
+                scrollSpeed = Math.abs(currentScroll - (scrollSpeed || 0)) * 0.01;
+                grid.material.opacity = 0.3 + Math.sin(Date.now() * 0.001 + scrollSpeed) * 0.2;
+            }
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+        
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Counter Animation
+        gsap.utils.toArray('.num').forEach(el => {
+            let val = +el.dataset.val;
+            gsap.fromTo(el, { innerText: 0 }, {
+                innerText: val,
+                duration: 2,
+                scrollTrigger: { trigger: el, start: "top 80%" },
+                snap: { innerText: 1 },
+                ease: 'power1.out',
+                onUpdate: function() {
+                    el.innerText = Math.floor(el.innerText);
+                }
+            });
+        });
+        
+        // Matrix typewriter effect
+        function typewriterEffect() {
+            const texts = [
+                "確実で迅速な配送をお約束します",
+                "24時間以内にお返事いたします",
+                "次世代ロジスティクス・ソリューション"
+            ];
+            let currentIndex = 0;
+            const element = document.getElementById('typewriter-text');
+            
+            function typeText(text, callback) {
+                let index = 0;
+                element.textContent = '';
+                
+                function type() {
+                    if (index < text.length) {
+                        element.textContent += text[index];
+                        index++;
+                        setTimeout(type, 75);
+                    } else {
+                        setTimeout(callback, 2000);
+                    }
+                }
+                type();
+            }
+            
+            function deleteText(callback) {
+                let text = element.textContent;
+                function deleteChar() {
+                    if (text.length > 0) {
+                        text = text.slice(0, -1);
+                        element.textContent = text;
+                        setTimeout(deleteChar, 50);
+                    } else {
+                        setTimeout(callback, 500);
+                    }
+                }
+                deleteChar();
+            }
+            
+            function cycle() {
+                typeText(texts[currentIndex], () => {
+                    deleteText(() => {
+                        currentIndex = (currentIndex + 1) % texts.length;
+                        cycle();
+                    });
+                });
+            }
+            
+            cycle();
+        }
+        
+        // Start typewriter effect
+        setTimeout(typewriterEffect, 1000);
+        
+        // PWA Ribbon
+        const pwaRibbon = document.getElementById('pwaRibbon');
+        ScrollTrigger.create({
+            trigger: "body",
+            start: "75%",
+            onEnter: () => pwaRibbon.classList.add('visible'),
+            onLeaveBack: () => pwaRibbon.classList.remove('visible')
+        });
+        
+        pwaRibbon.addEventListener('click', () => {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js');
+            }
+        });
+        
+        // Contact Form
+        document.getElementById('contactForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const message = formData.get('message');
+            
+            const subject = encodeURIComponent('LP Contact from ' + name);
+            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nMessage: ${message}`);
+            
+            window.location.href = `mailto:flexgo.7983150@gmail.com?subject=${subject}&body=${body}`;
+            
+            // Toast notification
+            const toast = document.createElement('div');
+            toast.textContent = '送信完了🚚✨';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #FF6B00;
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        });
+        
+        // Confetti Animation
+        const confettiCanvas = document.getElementById('confetti');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        
+        function resizeConfetti() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = 200;
+        }
+        resizeConfetti();
+        window.addEventListener('resize', resizeConfetti);
+        
+        const confettiParticles = [];
+        for (let i = 0; i < 50; i++) {
+            confettiParticles.push({
+                x: Math.random() * confettiCanvas.width,
+                y: Math.random() * confettiCanvas.height,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                color: `hsl(${Math.random() * 360}, 70%, 60%)`,
+                size: Math.random() * 4 + 2
+            });
+        }
+        
+        function animateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            confettiParticles.forEach(particle => {
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                
+                if (particle.x < 0 || particle.x > confettiCanvas.width) particle.vx *= -1;
+                if (particle.y < 0 || particle.y > confettiCanvas.height) particle.vy *= -1;
+                
+                confettiCtx.fillStyle = particle.color;
+                confettiCtx.fillRect(particle.x, particle.y, particle.size, particle.size);
+            });
+            
+            requestAnimationFrame(animateConfetti);
+        }
+        animateConfetti();
+        
+        // Keyboard navigation for stars
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    star.focus();
+                }
+            });
+        });
+        
+        // Smooth scroll for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
