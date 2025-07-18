@@ -1,901 +1,1029 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLEX GO - RUN THE CITY</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --accent: #FF6B00;
-            --bg: #0A0A23;
-            --txt: #F5F5F7;
-            --grid: rgba(255,255,255,.05);
-            --noise: rgba(255,107,0,.25);
-        }
-        
-        @media(prefers-color-scheme: light) {
-            :root {
-                --bg: #F5F5F7;
-                --txt: #0A0A23;
-                --grid: rgba(0,0,0,.06);
-            }
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', 'Noto Sans JP', sans-serif;
-            background: var(--bg);
-            color: var(--txt);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-inline-size: 1280px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        /* Header */
-        #nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-            backdrop-filter: blur(10px);
-            background: rgba(10, 10, 35, 0.8);
-            padding: 1rem 0;
-        }
-        
-        #nav .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-weight: 900;
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            color: var(--accent);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--txt);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-links a:hover,
-        .nav-links a:focus {
-            color: var(--accent);
-            outline: 2px solid var(--accent);
-            outline-offset: 2px;
-        }
-        
-        /* Hero */
-        #hero {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        #hero video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -2;
-            mask: url(#logo-mask);
-        }
-        
-        #noise {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-        }
-        
-        .hero-content {
-            text-align: center;
-            z-index: 1;
-        }
-        
-        .hero-title {
-            font-size: clamp(3rem, 8vw, 8rem);
-            font-weight: 900;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-        }
-        
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            min-height: 60px;
-        }
-        
-        .cta-btn {
-            background: var(--accent);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .cta-btn:hover,
-        .cta-btn:focus {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.4);
-            outline: 2px solid var(--accent);
-        }
-        
-        /* Showroom */
-        #showroom {
-            height: 100vh;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        #webgl {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        
-        .showroom-info {
-            position: absolute;
-            top: 2rem;
-            left: 2rem;
-            z-index: 100;
-            background: rgba(10, 10, 35, 0.8);
-            padding: 1rem;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Metrics */
-        #metric {
-            padding: 8rem 0;
-            background: linear-gradient(135deg, var(--bg) 0%, #1a1a3a 100%);
-            perspective: 1000px;
-        }
-        
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 4rem;
-            margin-top: 4rem;
-        }
-        
-        .metric-card {
-            text-align: center;
-            position: relative;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .metric-card:nth-child(1) {
-            transform: translateZ(0px);
-        }
-        
-        .metric-card:nth-child(2) {
-            transform: translateZ(50px);
-        }
-        
-        .metric-card:nth-child(3) {
-            transform: translateZ(100px);
-        }
-        
-        .num {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 900;
-            color: var(--accent);
-            line-height: 1;
-        }
-        
-        .metric-label {
-            font-size: 1.2rem;
-            margin-top: 0.5rem;
-            opacity: 0.8;
-        }
-        
-        .neon-line {
-            position: absolute;
-            width: 2px;
-            height: 100px;
-            background: linear-gradient(90deg, transparent, var(--accent), transparent);
-            opacity: 0.6;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
-        }
-        
-        /* Clients */
-        #clients {
-            padding: 8rem 0;
-            text-align: center;
-        }
-        
-        .client-stars {
-            margin-top: 4rem;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-        
-        .star {
-            font-size: 3rem;
-            color: var(--accent);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .star:hover,
-        .star:focus {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 10px var(--accent)) url(#goo);
-        }
-        
-        .testimonial {
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--accent);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            width: 200px;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            filter: url(#goo);
-        }
-        
-        .star:hover .testimonial,
-        .star:focus .testimonial {
-            opacity: 1;
-        }
-        
-        /* Contact */
-        #contact {
-            padding: 8rem 0;
-            background: linear-gradient(135deg, #1a1a3a 0%, var(--bg) 100%);
-        }
-        
-        .contact-form {
-            max-width: 600px;
-            margin: 4rem auto 0;
-            padding: 3rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 2rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--txt);
-            font-family: inherit;
-        }
-        
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: 2px solid var(--accent);
-            border-color: var(--accent);
-        }
-        
-        /* PWA Ribbon */
-        .pwa-ribbon {
-            position: fixed;
-            top: 50%;
-            right: -300px;
-            transform: translateY(-50%);
-            background: var(--accent);
-            color: white;
-            padding: 1rem;
-            border-radius: 10px 0 0 10px;
-            transition: right 0.3s ease;
-            z-index: 1000;
-            cursor: pointer;
-        }
-        
-        .pwa-ribbon.visible {
-            right: 0;
-        }
-        
-        /* Footer */
-        footer {
-            padding: 4rem 0;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        #confetti {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-        
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .social-links a {
-            display: inline-block;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--txt);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            animation: socialPulse 3s infinite;
-        }
-        
-        .social-links a:hover,
-        .social-links a:focus {
-            background: var(--accent);
-            transform: scale(1.1);
-        }
-        
-        @keyframes socialPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .metric-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .client-stars {
-                gap: 1rem;
-            }
-            
-            .star {
-                font-size: 2rem;
-            }
-        }
-        
-        /* Accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-        
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-        
-        /* Houdini Paint */
-        @supports (background: paint(neon-grid)) {
-            .metric-grid {
-                background: paint(neon-grid);
-            }
-        }
-    </style>
-</head>
-<body>
-    <header id="nav">
-        <div class="container">
-            <div class="logo">FLEX GO</div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#hero">ホーム</a></li>
-                    <li><a href="#showroom">車両</a></li>
-                    <li><a href="#metric">実績</a></li>
-                    <li><a href="#contact">お問い合わせ</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="【30年無事故】軽貨物配送のプロが、スポット便・定期便など、お客様の「困った」を解決します。急なご依頼、大切な荷物の輸送はお任せください。">
+<title>FLEX GO. | 軽貨物配送プロフェッショナル</title>
 
-    <section id="hero">
-        <video autoplay muted loop aria-label="配送トラックの映像">
-            <source src="/assets/hero.mp4" type="video/mp4">
-        </video>
-        <canvas id="noise" aria-hidden="true"></canvas>
-        <div class="hero-content">
-            <h1 class="hero-title">RUN THE CITY</h1>
-            <p class="hero-subtitle" id="typewriter-text">次世代ロジスティクス・ソリューション</p>
-            <a href="#contact" class="cta-btn">ミッションを依頼</a>
-        </div>
-        <svg width="0" height="0" aria-hidden="true">
-            <defs>
-                <clipPath id="logo-mask">
-                    <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-size="200" font-weight="900">FLEX GO</text>
-                </clipPath>
-                <filter id="goo">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
-                    <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo"/>
-                    <feBlend in="SourceGraphic" in2="goo"/>
-                </filter>
-            </defs>
-        </svg>
-    </section>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 
-    <section id="showroom">
-        <div class="showroom-info">
-            <h2>N-VAN SHOWROOM</h2>
-            <p>マウスでドラッグして360°確認</p>
-        </div>
-        <canvas id="webgl" aria-label="3D配送車両モデル"></canvas>
-    </section>
+<style>
+:root{
+  --accent: #FF6B00;
+  --accent-light: #FF8533;
+  --bg: #0A0A23;
+  --txt: #F5F5F7;
+  --card-bg: #1C1C2E;
+  --fs-hero: clamp(2.2rem,5vw,4rem);
+  --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-accent: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+  --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.3);
+}
 
-    <section id="metric">
-        <div class="container">
-            <h2 style="text-align: center; font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 2rem;">実績データ</h2>
-            <div class="metric-grid">
-                <div class="metric-card">
-                    <div class="num" data-val="120">0</div>
-                    <div class="metric-label">時間 / 配送完了</div>
-                </div>
-                <div class="metric-card">
-                    <div class="num" data-val="1200">0</div>
-                    <div class="metric-label">km / 日間走行</div>
-                </div>
-                <div class="metric-card">
-                    <div class="num" data-val="3">0</div>
-                    <div class="metric-label">年間稼働実績</div>
-                </div>
-            </div>
-        </div>
-    </section>
+@media(prefers-color-scheme:light){
+  :root{
+    --bg: #F5F6FA;
+    --txt: #0A0A23;
+    --card-bg: #FFFFFF;
+    --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.2);
+  }
+}
 
-    <section id="clients">
-        <div class="container">
-            <h2 style="text-align: center; font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 2rem;">クライアントの声</h2>
-            <div class="client-stars">
-                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
-                    ★
-                    <div class="testimonial">迅速で確実な配送サービスでした！</div>
-                </div>
-                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
-                    ★
-                    <div class="testimonial">コスト削減に大きく貢献しました</div>
-                </div>
-                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
-                    ★
-                    <div class="testimonial">24時間対応で助かります</div>
-                </div>
-                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
-                    ★
-                    <div class="testimonial">環境に優しい配送で満足</div>
-                </div>
-                <div class="star" tabindex="0" role="button" aria-label="クライアント評価">
-                    ★
-                    <div class="testimonial">追跡システムが便利です</div>
-                </div>
-            </div>
-        </div>
-    </section>
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    <section id="contact">
-        <div class="container">
-            <h2 style="text-align: center; font-size: clamp(2rem, 6vw, 4rem); margin-bottom: 2rem;">お問い合わせ</h2>
-            <form class="contact-form" id="contactForm">
-                <div class="form-group">
-                    <label for="name">お名前</label>
-                    <input type="text" id="name" name="name" required aria-describedby="name-error">
-                </div>
-                <div class="form-group">
-                    <label for="email">メールアドレス</label>
-                    <input type="email" id="email" name="email" required aria-describedby="email-error">
-                </div>
-                <div class="form-group">
-                    <label for="message">メッセージ</label>
-                    <textarea id="message" name="message" rows="5" required aria-describedby="message-error"></textarea>
-                </div>
-                <button type="submit" class="cta-btn">送信</button>
-            </form>
-        </div>
-    </section>
+body{
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--txt);
+  line-height: 1.8;
+  font-size: 16px;
+  overflow-x: hidden;
+}
 
-    <div class="pwa-ribbon" id="pwaRibbon" role="button" tabindex="0" aria-label="PWAインストール">
-        📱 ホーム画面に追加でオフライン見積もり
+/* Animated background */
+body::before{
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 40% 40%, rgba(75, 75, 198, 0.1) 0%, transparent 50%);
+  animation: morphBackground 20s ease-in-out infinite;
+  z-index: -1;
+}
+
+@keyframes morphBackground {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(180deg); }
+}
+
+/* Header with glass effect */
+header{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 64px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 35, 0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+header.scrolled{
+  background: rgba(10, 10, 35, 0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+header strong{
+  font-size: 1.2rem;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+nav a{
+  margin-left: 24px;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.9rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+nav a::after{
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-accent);
+  transition: width 0.3s ease;
+}
+
+nav a:hover{
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+nav a:hover::after{
+  width: 100%;
+}
+
+/* Hero section with enhanced effects */
+.hero{
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  overflow: hidden;
+}
+
+.hero::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--gradient-1);
+  opacity: 0.1;
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.1; }
+  50% { opacity: 0.2; }
+}
+
+.hero video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4;
+  filter: brightness(0.8) contrast(1.2);
+}
+
+.hero-logo{
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 60px rgba(255, 107, 0, 0.8);
+  filter: drop-shadow(0 4px 20px rgba(255, 107, 0, 0.4));
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  0% { 
+    filter: drop-shadow(0 4px 20px rgba(255, 107, 0, 0.4));
+    transform: scale(1);
+  }
+  100% { 
+    filter: drop-shadow(0 8px 40px rgba(255, 107, 0, 0.8));
+    transform: scale(1.02);
+  }
+}
+
+.hero h1{
+  position: relative;
+  font-size: var(--fs-hero);
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+}
+
+.hero p{
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Enhanced button with gradient and glow */
+.btn{
+  display: inline-block;
+  background: var(--gradient-accent);
+  color: #fff;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(255, 107, 0, 0.3);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.btn::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover{
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn:hover::before{
+  left: 100%;
+}
+
+/* Content sections with enhanced styling */
+.content{
+  max-width: 1200px;
+  margin: 120px auto;
+  padding: 0 24px;
+}
+
+h2{
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 48px;
+  text-align: center;
+  font-weight: 700;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h3{
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin-bottom: 16px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Enhanced grid with hover effects */
+.grid{
+  display: grid;
+  gap: 32px;
+}
+
+@media(min-width:768px){
+  .grid{
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}
+
+/* Enhanced cards with glassmorphism */
+.card{
+  background: rgba(28, 28, 46, 0.8);
+  backdrop-filter: blur(20px);
+  padding: 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gradient-accent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(255, 107, 0, 0.2);
+}
+
+.card:hover::before{
+  opacity: 1;
+}
+
+.card img{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.card:hover img{
+  transform: scale(1.05);
+}
+
+.card figcaption{
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Enhanced reason list */
+.reason-list li{
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(28, 28, 46, 0.3);
+  border-radius: 12px;
+  border-left: 4px solid var(--accent);
+  transition: all 0.3s ease;
+}
+
+.reason-list li:hover{
+  background: rgba(28, 28, 46, 0.5);
+  transform: translateX(8px);
+}
+
+.reason-list svg{
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  color: var(--accent);
+}
+
+.reason-list p{
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.reason-list span{
+  display: block;
+  font-weight: 400;
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Enhanced flow steps */
+.flow-step{
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(28, 28, 46, 0.3);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.flow-step:hover{
+  background: rgba(28, 28, 46, 0.5);
+  transform: translateX(8px);
+}
+
+.flow-step .num{
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-right: 24px;
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+}
+
+/* Enhanced vision section */
+.vision{
+  background: var(--gradient-1);
+  padding: 60px;
+  border-radius: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.vision::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Enhanced form elements */
+input, textarea{
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  background: rgba(28, 28, 46, 0.8);
+  backdrop-filter: blur(10px);
+  color: var(--txt);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus{
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Enhanced footer */
+footer{
+  text-align: center;
+  padding: 64px 24px;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  background: rgba(28, 28, 46, 0.5);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Floating particles animation */
+.particles{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.particle{
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+  50% { transform: translateY(-100px) rotate(180deg); opacity: 1; }
+}
+
+/* Enhanced Mobile responsiveness */
+@media (max-width: 768px) {
+  header { padding: 0 16px; }
+  
+  nav a { 
+    margin-left: 16px; 
+    font-size: 0.8rem; 
+  }
+  
+  .hero { 
+    min-height: 80vh; 
+    padding: 16px; 
+  }
+  
+  .hero h1 { 
+    font-size: 2rem; 
+    margin-bottom: 12px; 
+  }
+  
+  .hero p { 
+    font-size: 1rem; 
+    margin-bottom: 24px; 
+  }
+  
+  .btn { 
+    padding: 12px 24px; 
+    font-size: 0.9rem; 
+  }
+  
+  .content { 
+    margin: 60px auto; 
+    padding: 0 16px; 
+  }
+  
+  h2 { 
+    font-size: 1.8rem; 
+    margin-bottom: 32px; 
+  }
+  
+  .grid { 
+    gap: 20px; 
+  }
+  
+  .card { 
+    padding: 20px; 
+    border-radius: 16px; 
+  }
+  
+  .flow-step { 
+    flex-direction: column; 
+    text-align: center; 
+    padding: 16px; 
+  }
+  
+  .flow-step .num { 
+    width: 48px; 
+    height: 48px; 
+    font-size: 1.2rem; 
+    margin-right: 0; 
+    margin-bottom: 12px; 
+  }
+  
+  .reason-list li { 
+    flex-direction: column; 
+    text-align: center; 
+    padding: 16px; 
+  }
+  
+  .reason-list svg { 
+    margin-right: 0; 
+    margin-bottom: 8px; 
+  }
+  
+  .vision { 
+    padding: 40px 24px; 
+  }
+  
+  input, textarea { 
+    padding: 12px; 
+    font-size: 0.9rem; 
+  }
+  
+  footer { 
+    padding: 40px 16px; 
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-logo { font-size: 2.5rem; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero p { font-size: 0.9rem; }
+  .btn { padding: 10px 20px; }
+  .card { padding: 16px; }
+  .vision { padding: 30px 16px; }
+  h2 { font-size: 1.5rem; }
+}
+
+/* Loading screen */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #0A0A23 0%, #000000 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-logo {
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 30px;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: loadingPulse 2s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%, 100% { 
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px rgba(255, 107, 0, 0.5));
+  }
+  50% { 
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 40px rgba(255, 107, 0, 0.8));
+  }
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 3px solid rgba(255, 107, 0, 0.1);
+  border-top: 3px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: loadingFade 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes loadingFade {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.loading-particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.loading-particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: loadingFloat 4s linear infinite;
+}
+
+@keyframes loadingFloat {
+  0% {
+    transform: translateY(100vh) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) translateX(100px);
+    opacity: 0;
+  }
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+  z-index: 1000;
+  transition: width 0.1s ease;
+}
+
+</style>
+</head><body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-particles"></div>
+  <div class="loading-logo">FLEX GO.</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading...</div>
+</div>
+
+<header>
+  <strong>FLEX GO.</strong>
+  <nav>
+    <a href="#reason">選ばれる理由</a>
+    <a href="#service">サービス</a>
+    <a href="#contact">お問い合わせ</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <video src="https://assets.mixkit.co/videos/preview/mixkit-white-van-driving-on-a-city-highway-14813-large.mp4"
+           poster="https://images.unsplash.com/photo-1558980664-10ae9923d090?auto=format&w=1600&q=80"
+           autoplay loop muted playsinline></video>
+    <div class="fadeUp">
+      <div class="hero-logo">FLEX GO.</div>
+      <h1>もっとフレキシブルに<br>いこう。</h1>
+      <p>突然の配送依頼、定期便の運転手探し、大切な荷物の取り扱い...<br>30年の物流経験を活かし、軽貨物でできることは全てお任せください。</p>
+      <a href="#contact" class="btn">今すぐ相談する（24h以内返信）</a>
     </div>
+  </section>
 
-    <footer>
-        <canvas id="confetti" aria-hidden="true"></canvas>
-        <div class="container">
-            <p>&copy; 2024 FLEX GO. All rights reserved.</p>
-            <div class="social-links">
-                <a href="#" aria-label="Twitter">𝕏</a>
-                <a href="#" aria-label="Instagram">📷</a>
-            </div>
+  <section id="reason" class="content">
+    <h2>選ばれる理由</h2>
+    <div class="grid">
+      <div class="card">
+        <h3><span class="count" data-val="30">0</span>年無事故・無クレーム</h3>
+        <p>小型から大型トラックまで、30年間無事故・無クレームの高い運転技術と品質で、大切なお荷物を安全にお届けします。</p>
+      </div>
+      <div class="card">
+        <h3>機動力と迅速対応</h3>
+        <p>現在は軽貨物1台に絞り、小回りの良さを最大限に活かした体制です。お客様の「今すぐ」というご要望に迅速に対応します。</p>
+      </div>
+      <div class="card">
+        <h3>柔軟なサービス</h3>
+        <p>急なスポット便から、週数回の定期便、長距離チャーターまで。お客様のビジネスに合わせて柔軟な配送プランをご提案します。</p>
+      </div>
+      <div class="card">
+        <h3>荷物への愛情と責任感</h3>
+        <p>「この荷物は誰かの宝物」。そう考え、一つひとつのお荷物に愛情と責任を持って向き合います。荷扱いには誰よりも自信があります。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="for-you" class="content">
+    <h2>こんなお悩みありませんか？</h2>
+    <ul class="reason-list">
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div>
+          <p>「この荷物、絶対に壊してほしくない」</p>
+          <span>精密機器や壊れ物も、30年の経験で培った丁寧な荷扱いと梱包で安全に運びます。</span>
         </div>
-    </footer>
+      </li>
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div>
+          <p>「急ぎで運んでほしいけど、信頼できる人に頼みたい」</p>
+          <span>無事故・無クレームの実績が信頼の証。緊急時こそ、安心できるプロにお任せください。</span>
+        </div>
+      </li>
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <div>
+          <p>「コミュニケーションがしっかり取れる人がいい」</p>
+          <span>丁寧な報告・連絡・相談を徹底します。お客様との円滑な連携を第一に考えます。</span>
+        </div>
+      </li>
+    </ul>
+  </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js" type="module"></script>
-    <script src="https://unpkg.com/three@0.158.0/examples/jsm/loaders/GLTFLoader.js" type="module"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.29/dist/lenis.min.js"></script>
-    <script type="module">
-        import { createCanvas } from 'https://cdn.skypack.dev/shader-park-core';
-        import { OrbitControls } from 'https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js';
-        import { GLTFLoader } from 'https://unpkg.com/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
-        
-        gsap.registerPlugin(ScrollTrigger);
-        
-        // Smooth scrolling with Lenis
-        const lenis = new Lenis();
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-        
-        // Shader Park Noise
-        const noiseEl = document.getElementById('noise');
-        if (noiseEl) {
-            const noise = createCanvas(noiseEl, ({ uv, time }) => {
-                return vec3(sin(uv.x * 10.0 + time) * 0.2 + 0.2, uv.y, 0.5);
-            });
-        }
-        
-        // Three.js Scene
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ 
-            canvas: document.getElementById('webgl'), 
-            antialias: true,
-            alpha: true
+  <section id="service" class="content">
+    <h2>サービス内容</h2>
+    <div class="grid">
+      <figure class="card">
+        <img src="https://images.unsplash.com/photo-1568452320018-f2a2b7c04155?auto=format&w=800&q=80" alt="スポット緊急便" loading="lazy">
+        <figcaption>スポット緊急便</figcaption>
+      </figure>
+      <figure class="card">
+        <img src="https://images.unsplash.com/photo-1506466010722-395aa2bef877?auto=format&w=800&q=80" alt="定期ルート便" loading="lazy">
+        <figcaption>定期ルート便</figcaption>
+      </figure>
+      <figure class="card">
+        <img src="https://images.unsplash.com/photo-1506499184476-6d37b3e5d843?auto=format&w=800&q=80" alt="長距離チャーター" loading="lazy">
+        <figcaption>長距離チャーター</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="flow" class="content">
+    <h2>ご依頼の流れ</h2>
+    <div class="card">
+      <div class="flow-step"><div class="num">1</div><div><h3>お問い合わせ</h3><p>まずはお電話またはフォームから、お荷物の情報やご希望日時など、お気軽にご相談ください。</p></div></div>
+      <div class="flow-step"><div class="num">2</div><div><h3>ヒアリング・お見積もり</h3><p>担当者が迅速に内容を確認し、最適な配送プランと料金をご提案します。</p></div></div>
+      <div class="flow-step"><div class="num">3</div><div><h3>集荷・配送</h3><p>ご指定の日時・場所に集荷に伺い、安全・確実・迅速に目的地までお届けします。</p></div></div>
+      <div class="flow-step"><div class="num">4</div><div><h3>完了報告</h3><p>配送が完了しましたら、速やかにご報告いたします。定期便の場合は、日報での報告も可能です。</p></div></div>
+    </div>
+  </section>
+
+  <section id="vision" class="content">
+    <div class="vision">
+      <h2>今後の展望</h2>
+      <p>お客様の多様なニーズに、より高いレベルでお応えするため、<br>今後は車両台数・人員の拡充を計画しております。<br>将来的には、より大きな規模の案件にも対応できる体制を整え、<br>お客様と共に成長していくパートナーでありたいと考えています。</p>
+    </div>
+  </section>
+
+  <section id="contact" class="content">
+    <h2>お問い合わせ</h2>
+    <p style="text-align:center;margin-bottom:24px;">お見積もりは無料です。どんな些細なことでも、まずはお気軽にご相談ください。</p>
+    <form onsubmit="return sendMail(this)">
+      <input required name="name" placeholder="お名前">
+      <input required type="email" name="email" placeholder="メールアドレス">
+      <textarea required name="msg" rows="5" placeholder="ご依頼内容（例：〇月〇日、〇〇から〇〇へ、〇〇の配送をお願いしたい。など）"></textarea>
+      <button type="submit" class="btn">送信する</button>
+    </form>
+  </section>
+</main>
+
+<footer>
+  © 2025 FLEX GO.
+</footer>
+
+<script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+<script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Initialize loading screen
+  initLoadingScreen();
+
+  // Create floating particles
+  createParticles();
+  
+  // Scroll indicator
+  createScrollIndicator();
+  
+  // Header scroll effect
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+
+  /* Smooth anchor scroll */
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  /* Hero fade-up with stagger */
+  gsap.from('.hero .fadeUp', {
+    opacity: 0,
+    y: 60,
+    duration: 1.2,
+    ease: 'power3.out',
+    delay: 0.3
+  });
+
+  /* Enhanced FadeUp on scroll with stagger */
+  gsap.utils.toArray('.fadeUp').forEach((el, index) => {
+    gsap.from(el, {
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      delay: index * 0.1,
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      }
+    });
+  });
+
+  /* Card hover animations */
+  gsap.utils.toArray('.card').forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      gsap.to(card, {
+        scale: 1.02,
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      gsap.to(card, {
+        scale: 1,
+        duration: 0.3,
+        ease: 'power2.out'
+      });
+    });
+  });
+
+  /* CountUp numbers with enhanced animation */
+  gsap.utils.toArray('.count').forEach(el => {
+    const endValue = +el.dataset.val;
+    gsap.fromTo(el, { innerText: 0 }, {
+      innerText: endValue,
+      duration: 2.5,
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 80%'
+      },
+      snap: { innerText: 1 },
+      ease: 'power2.out',
+      onUpdate() {
+        el.innerText = Math.floor(el.innerText);
+      }
+    });
+  });
+
+  /* Parallax effect for hero video */
+  gsap.to('.hero video', {
+    yPercent: -50,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.hero',
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true
+    }
+  });
+
+  /* Button pulse animation */
+  gsap.to('.btn', {
+    scale: 1.05,
+    duration: 2,
+    ease: 'power2.inOut',
+    yoyo: true,
+    repeat: -1
+  });
+});
+
+function createParticles() {
+  const particlesContainer = document.createElement('div');
+  particlesContainer.className = 'particles';
+  document.body.appendChild(particlesContainer);
+
+  for (let i = 0; i < 50; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 6 + 's';
+    particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+    particlesContainer.appendChild(particle);
+  }
+}
+
+function createScrollIndicator() {
+  const indicator = document.createElement('div');
+  indicator.className = 'scroll-indicator';
+  document.body.appendChild(indicator);
+
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    indicator.style.width = scrolled + '%';
+  });
+}
+
+function initLoadingScreen() {
+  // Create loading particles
+  const loadingParticles = document.querySelector('.loading-particles');
+  for (let i = 0; i < 20; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'loading-particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 4 + 's';
+    particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    loadingParticles.appendChild(particle);
+  }
+
+  // Hide loading screen after everything loads
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loadingScreen = document.getElementById('loadingScreen');
+      loadingScreen.classList.add('hidden');
+      
+      // Start main animations after loading screen disappears
+      setTimeout(() => {
+        gsap.from('.hero .fadeUp', {
+          opacity: 0,
+          y: 60,
+          duration: 1.2,
+          ease: 'power3.out'
         });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x0A0A23);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0x404040, 0.4);
-        scene.add(ambientLight);
-        
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        directionalLight.position.set(10, 10, 5);
-        directionalLight.castShadow = true;
-        scene.add(directionalLight);
-        
-        // Anisotropic floor grid
-        const gridSize = 20;
-        const gridGeometry = new THREE.PlaneGeometry(gridSize, gridSize, 20, 20);
-        const gridMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0xFF6B00, 
-            wireframe: true,
-            opacity: 0.3,
-            transparent: true
-        });
-        const grid = new THREE.Mesh(gridGeometry, gridMaterial);
-        grid.rotation.x = -Math.PI / 2;
-        grid.position.y = -2;
-        scene.add(grid);
-        
-        // Controls
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.dampingFactor = 0.05;
-        controls.target.set(0, 0, 0);
-        
-        // Load GLTF Model
-        const loader = new GLTFLoader();
-        let van;
-        loader.load('/assets/van.glb', (gltf) => {
-            van = gltf.scene;
-            van.scale.set(2, 2, 2);
-            van.position.set(0, 0, 0);
-            scene.add(van);
-            
-            // Drop and spin animation
-            gsap.fromTo(van.position, { y: 10 }, { y: 0, duration: 2, ease: "bounce.out" });
-            gsap.fromTo(van.rotation, { y: Math.PI * 2 }, { y: 0, duration: 2, ease: "power2.out" });
-        }, undefined, (error) => {
-            console.log('GLTF loading error, using fallback');
-            // Fallback van shape
-            const geometry = new THREE.BoxGeometry(4, 2, 2);
-            const material = new THREE.MeshPhongMaterial({ color: 0xFF6B00 });
-            van = new THREE.Mesh(geometry, material);
-            van.position.set(0, 0, 0);
-            scene.add(van);
-            
-            // Drop animation for fallback
-            gsap.fromTo(van.position, { y: 10 }, { y: 0, duration: 2, ease: "bounce.out" });
-            gsap.fromTo(van.rotation, { y: Math.PI * 2 }, { y: 0, duration: 2, ease: "power2.out" });
-        });
-        
-        camera.position.set(5, 5, 5);
-        camera.lookAt(0, 0, 0);
-        
-        // Animation loop
-        let scrollSpeed = 0;
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            
-            // Grid pulsation based on scroll speed
-            if (grid) {
-                const currentScroll = window.pageYOffset;
-                scrollSpeed = Math.abs(currentScroll - (scrollSpeed || 0)) * 0.01;
-                grid.material.opacity = 0.3 + Math.sin(Date.now() * 0.001 + scrollSpeed) * 0.2;
-            }
-            
-            renderer.render(scene, camera);
-        }
-        animate();
-        
-        // Resize handler
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        // Counter Animation
-        gsap.utils.toArray('.num').forEach(el => {
-            let val = +el.dataset.val;
-            gsap.fromTo(el, { innerText: 0 }, {
-                innerText: val,
-                duration: 2,
-                scrollTrigger: { trigger: el, start: "top 80%" },
-                snap: { innerText: 1 },
-                ease: 'power1.out',
-                onUpdate: function() {
-                    el.innerText = Math.floor(el.innerText);
-                }
-            });
-        });
-        
-        // Matrix typewriter effect
-        function typewriterEffect() {
-            const texts = [
-                "確実で迅速な配送をお約束します",
-                "24時間以内にお返事いたします",
-                "次世代ロジスティクス・ソリューション"
-            ];
-            let currentIndex = 0;
-            const element = document.getElementById('typewriter-text');
-            
-            function typeText(text, callback) {
-                let index = 0;
-                element.textContent = '';
-                
-                function type() {
-                    if (index < text.length) {
-                        element.textContent += text[index];
-                        index++;
-                        setTimeout(type, 75);
-                    } else {
-                        setTimeout(callback, 2000);
-                    }
-                }
-                type();
-            }
-            
-            function deleteText(callback) {
-                let text = element.textContent;
-                function deleteChar() {
-                    if (text.length > 0) {
-                        text = text.slice(0, -1);
-                        element.textContent = text;
-                        setTimeout(deleteChar, 50);
-                    } else {
-                        setTimeout(callback, 500);
-                    }
-                }
-                deleteChar();
-            }
-            
-            function cycle() {
-                typeText(texts[currentIndex], () => {
-                    deleteText(() => {
-                        currentIndex = (currentIndex + 1) % texts.length;
-                        cycle();
-                    });
-                });
-            }
-            
-            cycle();
-        }
-        
-        // Start typewriter effect
-        setTimeout(typewriterEffect, 1000);
-        
-        // PWA Ribbon
-        const pwaRibbon = document.getElementById('pwaRibbon');
-        ScrollTrigger.create({
-            trigger: "body",
-            start: "75%",
-            onEnter: () => pwaRibbon.classList.add('visible'),
-            onLeaveBack: () => pwaRibbon.classList.remove('visible')
-        });
-        
-        pwaRibbon.addEventListener('click', () => {
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/sw.js');
-            }
-        });
-        
-        // Contact Form
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const message = formData.get('message');
-            
-            const subject = encodeURIComponent('LP Contact from ' + name);
-            const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nMessage: ${message}`);
-            
-            window.location.href = `mailto:flexgo.7983150@gmail.com?subject=${subject}&body=${body}`;
-            
-            // Toast notification
-            const toast = document.createElement('div');
-            toast.textContent = '送信完了🚚✨';
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #FF6B00;
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 10px;
-                z-index: 10000;
-                transform: translateX(100%);
-                transition: transform 0.3s ease;
-            `;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.transform = 'translateX(0)';
-            }, 100);
-            
-            setTimeout(() => {
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        });
-        
-        // Confetti Animation
-        const confettiCanvas = document.getElementById('confetti');
-        const confettiCtx = confettiCanvas.getContext('2d');
-        
-        function resizeConfetti() {
-            confettiCanvas.width = window.innerWidth;
-            confettiCanvas.height = 200;
-        }
-        resizeConfetti();
-        window.addEventListener('resize', resizeConfetti);
-        
-        const confettiParticles = [];
-        for (let i = 0; i < 50; i++) {
-            confettiParticles.push({
-                x: Math.random() * confettiCanvas.width,
-                y: Math.random() * confettiCanvas.height,
-                vx: (Math.random() - 0.5) * 2,
-                vy: (Math.random() - 0.5) * 2,
-                color: `hsl(${Math.random() * 360}, 70%, 60%)`,
-                size: Math.random() * 4 + 2
-            });
-        }
-        
-        function animateConfetti() {
-            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-            
-            confettiParticles.forEach(particle => {
-                particle.x += particle.vx;
-                particle.y += particle.vy;
-                
-                if (particle.x < 0 || particle.x > confettiCanvas.width) particle.vx *= -1;
-                if (particle.y < 0 || particle.y > confettiCanvas.height) particle.vy *= -1;
-                
-                confettiCtx.fillStyle = particle.color;
-                confettiCtx.fillRect(particle.x, particle.y, particle.size, particle.size);
-            });
-            
-            requestAnimationFrame(animateConfetti);
-        }
-        animateConfetti();
-        
-        // Keyboard navigation for stars
-        document.querySelectorAll('.star').forEach(star => {
-            star.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    star.focus();
-                }
-            });
-        });
-        
-        // Smooth scroll for navigation
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    </script>
+      }, 400);
+    }, 500);
+  });
+}
+
+/* mailto */
+function sendMail(f) {
+  const s = 'FLEX GO. ウェブサイトからのお問い合わせ';
+  const b = `お名前: ${f.name.value}\nメール: ${f.email.value}\n\n【ご依頼内容】\n${f.msg.value}`;
+  location.href = `mailto:YOUR_EMAIL@EXAMPLE.COM?subject=${encodeURIComponent(s)}&body=${encodeURIComponent(b)}`;
+  
+  // NOTE: You can show a confirmation message after a short delay.
+  setTimeout(() => {
+    alert('ありがとうございます。お問い合わせ内容をメーラーで送信してください。');
+  }, 200);
+
+  return false;
+}
+</script>
 </body>
 </html>
