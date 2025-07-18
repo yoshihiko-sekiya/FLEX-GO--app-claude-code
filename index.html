@@ -229,28 +229,6 @@ nav a:hover::after{
   -webkit-text-fill-color: transparent;
   background-clip: text;
   position: relative;
-  animation: logoFloat 3s ease-in-out infinite;
-  cursor: pointer;
-}
-
-.hero-logo::before{
-  content: '🚚';
-  position: absolute;
-  top: -20px;
-  right: -40px;
-  font-size: 2rem;
-  animation: bounce 2s infinite;
-}
-
-@keyframes logoFloat {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(1deg); }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
 }
 
 
@@ -332,20 +310,6 @@ nav a:hover::after{
   100% { opacity: 0; transform: scale(0.5); }
 }
 
-@keyframes explode {
-  0% { 
-    opacity: 1; 
-    transform: scale(0) rotate(0deg); 
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.5) rotate(180deg); 
-  }
-  100% { 
-    opacity: 0; 
-    transform: scale(0.5) rotate(360deg); 
-  }
-}
 
 /* Content sections with enhanced styling */
 .content{
@@ -1161,25 +1125,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
   
-  /* Logo click surprise */
-  document.querySelector('.hero-logo').addEventListener('click', () => {
-    const emojis = ['🎉', '🚀', '⭐', '🌟', '✨', '🎊'];
-    for (let i = 0; i < 20; i++) {
-      const emoji = document.createElement('div');
-      emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-      emoji.style.cssText = `
-        position: fixed;
-        left: ${Math.random() * window.innerWidth}px;
-        top: ${Math.random() * window.innerHeight}px;
-        font-size: 2rem;
-        pointer-events: none;
-        z-index: 9999;
-        animation: explode 2s ease-out forwards;
-      `;
-      document.body.appendChild(emoji);
-      setTimeout(() => emoji.remove(), 2000);
-    }
-  });
 });
 
 function createParticles() {
