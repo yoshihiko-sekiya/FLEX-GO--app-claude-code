@@ -7,43 +7,41 @@
 <title>FLEX GO. | 軽貨物配送プロフェッショナル</title>
 
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+JP:wght@400;700;900&family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --accent: #FF6B00;
-  --accent-light: #FF8533;
-  --gold: #FFD700;
-  --gold-light: #FFEA00;
-  --platinum: #E5E5E5;
-  --bg: #0A0A23;
-  --txt: #F5F5F7;
-  --card-bg: #1C1C2E;
-  --fs-hero: clamp(2.2rem,5vw,4rem);
+  /* Modern Minimalist Colors */
+  --accent: #007AFF;
+  --accent-light: #5AC8FA;
+  --bg: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --txt: #1D1D1F;
+  --txt-secondary: #6C6C70;
+  --card-bg: #FFFFFF;
+  --border: #E5E5E7;
+  --fs-hero: clamp(2.5rem,6vw,4.5rem);
   
-  /* Premium Gradients */
-  --gradient-luxury: linear-gradient(135deg, #667eea 0%, #764ba2 40%, #FF6B00 100%);
-  --gradient-gold: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
-  --gradient-platinum: linear-gradient(135deg, #E5E5E5 0%, #C0C0C0 50%, #A8A8A8 100%);
-  --gradient-royal: linear-gradient(135deg, #4B0082 0%, #8A2BE2 50%, #9370DB 100%);
-  --gradient-cosmic: linear-gradient(135deg, #0F0C29 0%, #302B63 50%, #24243e 100%);
-  --gradient-fire: linear-gradient(135deg, #FF6B00 0%, #FF8533 25%, #FFD700 75%, #FFA500 100%);
-  --gradient-diamond: linear-gradient(135deg, #E8E8E8 0%, #F5F5F5 25%, #FFFFFF 50%, #F0F0F0 75%, #E0E0E0 100%);
+  /* Clean Shadows */
+  --shadow-subtle: 0 2px 16px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12);
   
-  /* Premium Shadows */
-  --shadow-luxury: 0 20px 60px rgba(255, 107, 0, 0.4), 0 0 80px rgba(255, 215, 0, 0.2);
-  --shadow-gold: 0 15px 45px rgba(255, 215, 0, 0.5), 0 0 60px rgba(255, 165, 0, 0.3);
-  --shadow-platinum: 0 25px 50px rgba(255, 255, 255, 0.1), 0 0 100px rgba(229, 229, 229, 0.2);
-  --shadow-royal: 0 30px 60px rgba(75, 0, 130, 0.4), 0 0 120px rgba(138, 43, 226, 0.3);
-  --shadow-cosmic: 0 35px 70px rgba(0, 0, 0, 0.8), 0 0 140px rgba(75, 0, 130, 0.4);
+  /* Modern Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 }
 
-@media(prefers-color-scheme:light){
+@media(prefers-color-scheme:dark){
   :root{
-    --bg: #F5F6FA;
-    --txt: #0A0A23;
-    --card-bg: #FFFFFF;
-    --shadow-glow: 0 0 40px rgba(255, 107, 0, 0.2);
+    --bg: #000000;
+    --bg-secondary: #1C1C1E;
+    --txt: #F5F5F7;
+    --txt-secondary: #8E8E93;
+    --card-bg: #1C1C1E;
+    --border: #2C2C2E;
   }
 }
 
@@ -62,7 +60,7 @@ body{
   overflow-x: hidden;
 }
 
-/* Luxury Animated Background */
+/* Clean Modern Background */
 body::before{
   content: '';
   position: fixed;
@@ -70,99 +68,46 @@ body::before{
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
-    radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(255, 107, 0, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 40% 40%, rgba(75, 0, 130, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 70% 70%, rgba(138, 43, 226, 0.1) 0%, transparent 35%),
-    linear-gradient(135deg, rgba(15, 12, 41, 0.9) 0%, rgba(48, 43, 99, 0.8) 50%, rgba(36, 36, 62, 0.9) 100%);
-  animation: luxuryMorphBackground 25s ease-in-out infinite;
+  background: var(--bg);
   z-index: -1;
 }
 
-@keyframes luxuryMorphBackground {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    filter: hue-rotate(0deg) brightness(1);
-  }
-  25% { 
-    transform: scale(1.08) rotate(90deg);
-    filter: hue-rotate(15deg) brightness(1.1);
-  }
-  50% { 
-    transform: scale(1.15) rotate(180deg);
-    filter: hue-rotate(30deg) brightness(1.2);
-  }
-  75% { 
-    transform: scale(1.08) rotate(270deg);
-    filter: hue-rotate(15deg) brightness(1.1);
-  }
-}
-
-/* Floating luxury particles */
-body::after{
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(2px 2px at 20px 30px, rgba(255, 215, 0, 0.8), transparent),
-    radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 90px 40px, rgba(255, 107, 0, 0.7), transparent),
-    radial-gradient(1px 1px at 130px 80px, rgba(138, 43, 226, 0.5), transparent),
-    radial-gradient(2px 2px at 160px 30px, rgba(255, 215, 0, 0.6), transparent);
-  background-repeat: repeat;
-  background-size: 200px 100px;
-  animation: luxurySparkle 15s linear infinite;
-  z-index: -1;
-  pointer-events: none;
-}
-
-@keyframes luxurySparkle {
-  0% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
-  50% { transform: translateY(-50px) rotate(180deg); opacity: 0.8; }
-  100% { transform: translateY(-100px) rotate(360deg); opacity: 0.4; }
-}
-
-/* Header with glass effect */
+/* Clean Modern Header */
 header{
   position: sticky;
   top: 0;
   z-index: 1000;
-  height: 64px;
+  height: 72px;
   padding: 0 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(10, 10, 35, 0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border);
   transition: all 0.3s ease;
 }
 
 header.scrolled{
-  background: rgba(10, 10, 35, 0.95);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: var(--shadow-subtle);
 }
 
 header strong{
-  font-size: 1.2rem;
-  background: var(--gradient-accent);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--txt);
+  letter-spacing: -0.02em;
 }
 
 nav a{
-  margin-left: 24px;
-  font-weight: 600;
+  margin-left: 32px;
+  font-weight: 500;
   text-decoration: none;
-  color: inherit;
-  font-size: 0.9rem;
+  color: var(--txt-secondary);
+  font-size: 0.95rem;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 nav a::after{
@@ -172,13 +117,12 @@ nav a::after{
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--gradient-accent);
-  transition: width 0.3s ease;
+  background: var(--accent);
+  transition: width 0.2s ease;
 }
 
 nav a:hover{
-  color: var(--accent);
-  transform: translateY(-2px);
+  color: var(--txt);
 }
 
 nav a:hover::after{
@@ -226,153 +170,63 @@ nav a:hover::after{
 
 .hero-logo{
   font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  margin-bottom: 20px;
-  background: var(--gradient-fire);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 
-    0 0 60px rgba(255, 215, 0, 0.8),
-    0 0 120px rgba(255, 107, 0, 0.6),
-    0 0 180px rgba(255, 165, 0, 0.4);
-  filter: drop-shadow(0 8px 30px rgba(255, 215, 0, 0.6));
-  animation: luxuryLogoGlow 4s ease-in-out infinite alternate;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  margin-bottom: 24px;
+  color: var(--txt);
   position: relative;
 }
 
-.hero-logo::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  opacity: 0;
-  animation: luxuryShimmer 3s ease-in-out infinite;
-}
-
-@keyframes luxuryShimmer {
-  0%, 100% { opacity: 0; transform: translateX(-100%); }
-  50% { opacity: 1; transform: translateX(100%); }
-}
-
-@keyframes luxuryLogoGlow {
-  0% { 
-    filter: drop-shadow(0 8px 30px rgba(255, 215, 0, 0.6));
-    transform: scale(1) rotateY(0deg);
-  }
-  25% { 
-    filter: drop-shadow(0 15px 50px rgba(255, 107, 0, 0.8));
-    transform: scale(1.03) rotateY(5deg);
-  }
-  50% { 
-    filter: drop-shadow(0 20px 70px rgba(255, 215, 0, 1));
-    transform: scale(1.05) rotateY(0deg);
-  }
-  75% { 
-    filter: drop-shadow(0 15px 50px rgba(255, 165, 0, 0.8));
-    transform: scale(1.03) rotateY(-5deg);
-  }
-  100% { 
-    filter: drop-shadow(0 8px 30px rgba(255, 215, 0, 0.6));
-    transform: scale(1) rotateY(0deg);
-  }
-}
 
 .hero h1{
   position: relative;
   font-size: var(--fs-hero);
-  font-weight: 700;
-  line-height: 1.4;
-  margin-bottom: 16px;
-  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 24px;
+  color: var(--txt);
+  letter-spacing: -0.02em;
 }
 
 .hero p{
   position: relative;
-  max-width: 720px;
-  margin: 0 auto 32px;
-  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
   font-size: 1.1rem;
-  opacity: 0.9;
+  color: var(--txt-secondary);
+  font-weight: 400;
 }
 
-/* Premium luxury button */
+/* Clean Modern Button */
 .btn{
   display: inline-block;
-  background: var(--gradient-fire);
+  background: var(--accent);
   color: #fff;
-  padding: 20px 50px;
-  border-radius: 60px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  padding: 16px 32px;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  letter-spacing: 0;
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-luxury);
-  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-medium);
+  border: none;
   cursor: pointer;
-  font-family: 'Cinzel', 'Noto Sans JP', serif;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  transform-style: preserve-3d;
-}
-
-.btn::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.8s ease;
-  z-index: 1;
-}
-
-.btn::after{
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: var(--gradient-gold);
-  border-radius: 62px;
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.6s ease;
+  font-family: inherit;
+  font-size: 1rem;
 }
 
 .btn:hover{
-  transform: translateY(-8px) scale(1.05);
-  box-shadow: var(--shadow-royal);
-  border-color: rgba(255, 215, 0, 0.8);
-  color: #000;
-  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.btn:hover::before{
-  left: 100%;
-}
-
-.btn:hover::after{
-  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-large);
+  background: var(--accent-light);
 }
 
 .btn:active{
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(0);
+  box-shadow: var(--shadow-subtle);
 }
 
 /* Content sections with enhanced styling */
@@ -383,44 +237,35 @@ nav a:hover::after{
 }
 
 h2{
-  font-family: 'Playfair Display', 'Noto Sans JP', serif;
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  margin-bottom: 60px;
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 48px;
   text-align: center;
   font-weight: 700;
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+  color: var(--txt);
   position: relative;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.02em;
 }
 
 h2::after{
   content: '';
   position: absolute;
-  bottom: -10px;
+  bottom: -12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: var(--gradient-fire);
-  border-radius: 2px;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
 }
 
 h3{
-  font-family: 'Cinzel', 'Noto Sans JP', serif;
-  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
-  margin-bottom: 20px;
-  background: var(--gradient-fire);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: 'Inter', 'Noto Sans JP', sans-serif;
+  font-size: clamp(1.2rem, 3vw, 1.5rem);
+  margin-bottom: 16px;
+  color: var(--txt);
   font-weight: 600;
-  letter-spacing: 0.01em;
-  text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  letter-spacing: -0.01em;
 }
 
 /* Enhanced grid with hover effects */
@@ -435,82 +280,36 @@ h3{
   }
 }
 
-/* Luxury cards with premium effects */
+/* Clean Modern Cards */
 .card{
-  background: linear-gradient(135deg, 
-    rgba(28, 28, 46, 0.9) 0%, 
-    rgba(48, 43, 99, 0.8) 50%, 
-    rgba(36, 36, 62, 0.9) 100%);
-  backdrop-filter: blur(25px);
-  padding: 40px;
-  border-radius: 25px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-  box-shadow: var(--shadow-luxury);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--card-bg);
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-subtle);
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-  transform-style: preserve-3d;
-}
-
-.card::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-gold);
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  border-radius: 25px;
-  z-index: -1;
-}
-
-.card::after{
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: var(--gradient-fire);
-  border-radius: 27px;
-  z-index: -2;
-  opacity: 0;
-  transition: opacity 0.5s ease;
 }
 
 .card:hover{
-  transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
-  box-shadow: var(--shadow-royal);
-  border-color: rgba(255, 215, 0, 0.5);
-}
-
-.card:hover::before{
-  opacity: 0.1;
-}
-
-.card:hover::after{
-  opacity: 1;
-}
-
-.card:nth-child(2n):hover{
-  transform: translateY(-15px) rotateX(-5deg) rotateY(-5deg);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-medium);
+  border-color: var(--accent);
 }
 
 .card img{
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   margin-bottom: 24px;
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
 }
 
 .card:hover img{
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .card figcaption{
